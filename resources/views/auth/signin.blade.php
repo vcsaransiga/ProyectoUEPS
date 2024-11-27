@@ -32,11 +32,6 @@
                                             {{ session('success') }}
                                         </div>
                                     @endif
-                                    {{-- @if (session('error'))
-                                        <div class="alert alert-danger text-sm" role="alert">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif --}}
                                     @error('message')
                                         <div class="alert alert-danger text-sm" role="alert">
                                             {{ $message }}
@@ -63,22 +58,14 @@
                                             @enderror
                                         </div>
                                         <label style="color:#4a59a4!important;">Contraseña</label>
-                                        <div class="mb-3 d-flex">
-                                            <div class="input-group">
-                                                <input type="password" id="password" name="password"
-                                                    value="{{ old('password') ? old('password') : '' }}"
-                                                    class="form-control" placeholder="Contraseña" aria-label="Password"
-                                                    aria-describedby="password-addon">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary mb-0" type="button"
-                                                        id="togglePassword">
-                                                        <i class="fas fa-eye" id="toggleIcon"></i>
-                                                    </button>
-                                                </div>
-
-                                            </div>
-
-
+                                        <div class="mb-3 position-relative">
+                                            <!-- Input con el icono integrado -->
+                                            <input type="password" id="password" name="password"
+                                                class="form-control pe-5 no-native-password-icon" placeholder="Contraseña"
+                                                aria-label="Password" aria-describedby="password-addon">
+                                            <!-- Icono que controla la visibilidad -->
+                                            <i class="fas fa-eye position-absolute end-0 top-50 translate-middle-y me-3 cursor-pointer" 
+                                               id="toggleIcon"></i>
                                         </div>
                                         @if ($errors->has('message'))
                                             <div class="alert alert-danger text-sm" role="alert">
@@ -98,7 +85,6 @@
                                                 style="background-color:#84be51!important; border-color:#84be51;">Iniciar
                                                 Sesión</button>
                                         </div>
-
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
@@ -115,42 +101,31 @@
                                 <img src="../assets/img/logoVertical.png" alt="Logo UEPS">
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var countdownElement = document.getElementById('countdown');
-            if (countdownElement) {
-                var seconds = parseInt(document.getElementById('seconds').textContent);
-                var interval = setInterval(function() {
-                    seconds--;
-                    document.getElementById('seconds').textContent = seconds;
-                    if (seconds <= 0) {
-                        clearInterval(interval);
-                        countdownElement.style.display = 'none';
-                    }
-                }, 1000);
-            }
-        });
-    </script>
+    <style>
+        /* Ocultar el icono nativo del navegador */
+        input[type="password"].no-native-password-icon::-ms-reveal, 
+        input[type="password"].no-native-password-icon::-ms-clear,
+        input[type="password"].no-native-password-icon::-webkit-clear-button,
+        input[type="password"].no-native-password-icon::-webkit-password-toggle-button {
+            display: none;
+        }
+    </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const togglePassword = document.querySelector('#togglePassword');
-            const password = document.querySelector('#password');
-            const toggleIcon = document.querySelector('#toggleIcon');
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
 
-            togglePassword.addEventListener('click', function(e) {
-                // Cambiar el tipo de input
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
-
-                // Cambiar el icono
+            // Alternar entre ver y ocultar contraseña al hacer clic en el icono
+            toggleIcon.addEventListener('click', () => {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
                 toggleIcon.classList.toggle('fa-eye');
                 toggleIcon.classList.toggle('fa-eye-slash');
             });

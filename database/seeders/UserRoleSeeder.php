@@ -23,7 +23,7 @@ class UserRoleSeeder extends Seeder
         $userZamyr = User::where('email', 'admin@ueps.com')->first();
         $userZamyr->assignRole('administrador', 'auditor');
 
-        $userMelanie = User::where('email', 'melanierubi.mu@gmail.com')->first();
+        $userMelanie = User::where('email', 'cecilia2002n@gmail.com')->first();
         $userMelanie->assignRole('administrador', 'auditor');
 
         $userAuditor = User::where('email', 'auditor@example.com')->first();
