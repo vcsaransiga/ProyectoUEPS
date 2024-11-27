@@ -96,9 +96,9 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
             ],
             [
-                'name' => 'Melanie',
-                'last_name' => 'Ullco',
-                'email' => 'melanierubi.mu@gmail.com',
+                'name' => 'Veronica',
+                'last_name' => 'Saransig',
+                'email' => 'cecilia2002n@gmail.com',
                 'password' => Hash::make('1234567'),
                 'status' => true,
                 'created_at' => now(),

@@ -1,5 +1,4 @@
 <x-guest-layout>
-
     <div class="container position-sticky z-index-sticky top-0">
         <div class="row">
             <div class="col-12">
@@ -7,7 +6,7 @@
             </div>
         </div>
     </div>
-    <main class="main-content  mt-0">
+    <main class="main-content mt-0">
         <section>
             <div class="page-header min-vh-100">
                 <div class="container">
@@ -57,32 +56,18 @@
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        {{-- <label style="color:#4a59a4!important;">Contraseña</label>
-                                        <div class="mb-3">
-                                            <input type="password" id="password" name="password" class="form-control"
+                                        <label style="color:#4a59a4!important;">Contraseña</label>
+                                        <div class="mb-3 position-relative">
+                                            <!-- Input con icono integrado -->
+                                            <input type="password" id="password" name="password" 
+                                                class="form-control pe-5 no-native-password-icon" 
                                                 placeholder="Crea una contraseña" aria-label="Password"
                                                 aria-describedby="password-addon">
+                                            <i class="fas fa-eye position-absolute end-0 top-50 translate-middle-y me-3 cursor-pointer"
+                                                id="toggleIcon"></i>
                                             @error('password')
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
-                                        </div> --}}
-                                        <label style="color:#4a59a4!important;">Contraseña</label>
-                                        <div class="mb-3">
-                                            <div class="input-group">
-                                                <input type="password" id="password" name="password"
-                                                    value="{{ old('password') ? old('password') : '' }}"
-                                                    class="form-control" placeholder="Crea una contraseña"
-                                                    aria-label="Password" aria-describedby="password-addon">
-                                                @error('password')
-                                                    <span class="text-danger text-sm">{{ $message }}</span>
-                                                @enderror
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary mb-0" type="button"
-                                                        id="togglePassword">
-                                                        <i class="fas fa-eye" id="toggleIcon"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-dark w-100 mt-4 mb-3"
@@ -104,18 +89,28 @@
             </div>
         </section>
     </main>
+
+    <style>
+        /* Ocultar icono nativo del navegador */
+        input[type="password"].no-native-password-icon::-ms-reveal,
+        input[type="password"].no-native-password-icon::-ms-clear,
+        input[type="password"].no-native-password-icon::-webkit-clear-button,
+        input[type="password"].no-native-password-icon::-webkit-password-toggle-button {
+            display: none;
+        }
+    </style>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const togglePassword = document.querySelector('#togglePassword');
-            const password = document.querySelector('#password');
-            const toggleIcon = document.querySelector('#toggleIcon');
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
 
-            togglePassword.addEventListener('click', function(e) {
-                // Cambiar el tipo de input
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
+            // Alternar visibilidad de contraseña
+            toggleIcon.addEventListener('click', function () {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
 
-                // Cambiar el icono
+                // Cambiar icono entre "mostrar" y "ocultar"
                 toggleIcon.classList.toggle('fa-eye');
                 toggleIcon.classList.toggle('fa-eye-slash');
             });
