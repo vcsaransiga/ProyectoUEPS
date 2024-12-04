@@ -15,7 +15,7 @@ use App\Models\Student;
                     <div class="d-md-flex align-items-center mb-3 mx-2">
                         <div class="mb-md-0 mb-3">
                             <h3 class="font-weight-bold mb-0">Hola, {{ auth()->user()->name }}</h3>
-                            <p class="mb-0">Bienvenido a tu Panel de Control</p>
+                            <p class="mb-0">Bienvenido a tu Panel de Control </p>
                         </div>
                         <button type="button"
                             class="btn btn-sm btn-white btn-icon d-flex align-items-center mb-0 ms-md-auto mb-sm-0 mb-2 me-2">
