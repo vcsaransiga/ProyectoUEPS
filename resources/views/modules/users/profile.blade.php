@@ -5,22 +5,49 @@
         </div>
         <x-app.navbar />
         <div class="px-5 py-4 container-fluid ">
-            <form action="{{ route('profile.update', auth()->user()->id) }}" method="POST">
+            <form action="{{ route('profile.update', auth()->user()->id) }}" method="POST" enctype="multipart/form-data" id="profileForm">
                 @csrf
                 @method('PUT')
-                <div class="mt-5 mb-5 mt-lg-9 row justify-content-center">
+
+                <!-- Mensaje de éxito o error -->
+                <div class="row justify-content-center">
                     <div class="col-lg-9 col-12">
-                        <div class="card card-body" style="box-shadow: 2px 3px 25px -2px rgb(43, 51, 95);"
-                            id="profile">
-                            <div class="row z-index-2 justify-content-center align-items-center">
-                                <div class="col-sm-auto col-4">
+                        @if (session('error'))
+                            <div class="alert alert-danger" role="alert" id="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success" role="alert" id="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Cuadro de foto de perfil centrado con información -->
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-9 col-12">
+                        <div class="card card-body" style="box-shadow: 2px 3px 25px -2px rgb(43, 51, 95);" id="profile">
+                            <div class="row justify-content-center align-items-center">
+                                <!-- Foto de perfil -->
+                                <div class="col-sm-auto text-center mb-3">
                                     <div class="avatar avatar-xl position-relative">
                                         <img class="w-100 h-100 object-fit-cover border-radius-lg shadow-sm"
-                                            src="{{ Auth::user()->profile_photo ? asset('storage/profile_photos/' . Auth::user()->profile_photo) : asset('storage/profile_photos/default.jpg') }}"
+                                            src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('storage/profile_photos/default.jpg') }}"
                                             id="profileImage" style="cursor:pointer;">
                                     </div>
+                                    <div class="mt-3">
+                                        <label for="profile_photo" class="form-label">Subir Foto</label>
+                                        <input type="file" name="profile_photo" id="profile_photo" class="form-control" onchange="previewImage(event)">
+                                        @error('profile_photo')
+                                            <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="col-sm-auto col-8 my-auto">
+
+                                <!-- Información del usuario -->
+                                <div class="col-sm-auto my-auto text-center">
                                     <div class="h-100">
                                         <h5 class="mb-1 font-weight-bolder">
                                             {{ auth()->user()->name }} {{ auth()->user()->last_name }}
@@ -38,23 +65,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center">
+
+                <!-- Información Básica -->
+                <div class="mb-5 row justify-content-center mt-5">
                     <div class="col-lg-9 col-12">
-                        @if (session('error'))
-                            <div class="alert alert-danger" role="alert" id="alert">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                        @if (session('success'))
-                            <div class="alert alert-success" role="alert" id="alert">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                    </div>
-                </div>
-                <div class="mb-5 row justify-content-center">
-                    <div class="col-lg-9 col-12 ">
-                        <div class="card " id="basic-info">
+                        <div class="card" id="basic-info">
                             <div class="card-header">
                                 <h5>Información Básica</h5>
                             </div>
@@ -74,12 +89,11 @@
                                             value="{{ old('email', auth()->user()->email) }}" class="form-control">
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt-3">
                                     <div class="col-6">
                                         <label for="last_name">Apellido</label>
                                         <input type="text" name="last_name" id="last_name"
-                                            value="{{ old('last_name', auth()->user()->last_name) }}"
-                                            class="form-control">
+                                            value="{{ old('last_name', auth()->user()->last_name) }}" class="form-control">
                                         @error('last_name')
                                             <span class="text-danger text-sm">{{ $message }}</span>
                                         @enderror
@@ -93,7 +107,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="row p-2">
+                                <div class="row p-2 mt-3">
                                     <label for="about">Sobre Mí</label>
                                     <textarea name="about" id="about" rows="5" class="form-control">{{ old('about', auth()->user()->about) }}</textarea>
                                     @error('about')
@@ -114,4 +128,15 @@
             </form>
         </div>
     </main>
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('profileImage');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </x-app-layout>
