@@ -11,7 +11,7 @@
                         <div style="display: flex; justify-content: space-between;">
                             <div style="display: flex;">
                                 <div style="margin-top: 7vh; margin-left: 5vh;">
-                                    <p style="font-weight: bold; color: #0F172A;">Nombre del Proyecto:</p>
+                                    <p style="font-weight: bold; color: #0F172A;">Nombre del Proyecto: XVIDEOS</p>
                                     <p style="font-weight: bold; color: #0F172A;">Responsable del Proyecto:</p>
                                     <p style="font-weight: bold; color: #0F172A;">Periodos del proyecto:</p>
                                     <p style="font-weight: bold; color: #0F172A;">Modulos del Proyecto:</p>

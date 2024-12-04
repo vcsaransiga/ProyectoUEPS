@@ -24,7 +24,6 @@ class UserController extends Controller
 
         return view('modules.users.index', compact('users', 'roles', 'sortField', 'sortDirection'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -33,7 +32,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'status' => 'required|boolean',
-            'roles' => 'required|array',
+            'roles' => 'required|array|min:1',
         ], [
             'name.required' => 'El nombre es obligatorio',
             'name.regex' => 'El nombre no puede contener números',
@@ -49,9 +48,17 @@ class UserController extends Controller
             'roles.required' => 'Debes seleccionar al menos un rol',
         ]);
     
-        // Crea el usuario
-        $user = User::create($request->all());
-        $user->assignRole($request->roles);
+        // Crea el usuario con los datos, cifrando la contraseña
+        $user = User::create([
+            'name' => $request->name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password), // Ciframos la contraseña
+            'status' => $request->status,
+        ]);
+    
+        // Asigna los roles seleccionados (usando los id de los roles)
+        $user->assignRole($request->roles); // Aquí usas los ids de los roles que el formulario envió
     
         return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
     }
