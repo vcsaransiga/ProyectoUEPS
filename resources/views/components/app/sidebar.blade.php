@@ -109,7 +109,7 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="nav-link-text ms-1">Información</span>
+                        <span class="nav-link-text ms-1">Datos</span>
                     </a>
                 </li>
             @endrole
