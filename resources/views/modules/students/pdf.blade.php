@@ -78,9 +78,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($Students as $student)
+                    @foreach ($students as $student)
                     <tr>
-                        <td class="tw-px-6 tw-py-4">{{ $student->id_responsible }}</td>
+                        <td class="tw-px-6 tw-py-4">{{ $student->id_stud }}</td>
                         <td class="tw-px-6 tw-py-4">{{ $student->card_id }}</td>
                         <td class="tw-px-6 tw-py-4">{{ $student->name }}</td>
                         <td class="tw-px-6 tw-py-4">{{ $student->last_name }}</td>
