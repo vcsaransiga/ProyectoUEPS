@@ -18,7 +18,7 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
      */
     public function collection()
     {
-        return User::all(['id', 'name', 'last_name', 'email', 'telephone', 'status']);
+        return User::all(['id', 'name', 'last_name', 'email', 'phone', 'status']);
     }
 
     /**
@@ -34,7 +34,7 @@ class UserExport implements FromCollection, WithHeadings, WithStyles, ShouldAuto
             'Apellido',
             'Correo Electrónico',
             'Teléfono',
-            'Estado',
+            'Estado     ',
         ];
     }
 
