@@ -519,3 +519,53 @@
         });
     });
 </script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var createUserModal = document.getElementById('createUserModal');
+        createUserModal.addEventListener('show.bs.modal', function(event) {
+
+            var modalForm = createUserModal.querySelector('form');
+
+            var modalNameInput = editUserModal.querySelector('name');
+            var modalLastNameInput = editUserModal.querySelector('last_name');
+            var modalEmailInput = editUserModal.querySelector('email');
+            var modalPasswordInput = editUserModal.querySelector('password');
+            var modalStatusInput = editUserModal.querySelector('status');
+
+            modalNameInput.value = userName;
+            modalLastNameInput.value = userLastName;
+            modalEmailInput.value = userEmail;
+            modalPasswordInput.value = password;
+            modalStatusInput.value = userStatus;
+            
+        });
+    });
+    var viewRolesModal = document.getElementById('viewRolesModal');
+    viewRolesModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var userId = button.getAttribute('data-user-id');
+        var rolesList = document.getElementById('rolesList');
+
+        rolesList.innerHTML = '';
+
+        fetch('/info/users/' + userId + '/roles')
+            .then(response => response.json())
+            .then(data => {
+                if (data.roles.length > 0) {
+                    data.roles.forEach(function(role) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = capitalizeFirstLetter(role);
+                        listItem.classList.add('list-group-item');
+                        rolesList.appendChild(listItem);
+                    });
+                } else {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = 'No tiene roles asignados';
+                    listItem.classList.add('list-group-item');
+                    rolesList.appendChild(listItem);
+                }
+            });
+    });
+</script>
