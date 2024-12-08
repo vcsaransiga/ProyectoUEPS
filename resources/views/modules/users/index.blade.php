@@ -20,7 +20,11 @@
                             </div>
                         </div>
 
+<<<<<<< HEAD
                         @include('components.flash-message')
+=======
+                        
+>>>>>>> sergio
 
                   
 
