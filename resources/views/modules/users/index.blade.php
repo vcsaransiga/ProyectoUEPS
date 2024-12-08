@@ -20,13 +20,7 @@
                             </div>
                         </div>
 
-<<<<<<< HEAD
                         @include('components.flash-message')
-=======
-                        
->>>>>>> sergio
-
-                  
 
                         <div class="tw-relative tw-overflow-x-auto tw-shadow-md sm:tw-rounded-lg tw-p-5">
                             <div
