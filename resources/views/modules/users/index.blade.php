@@ -278,6 +278,7 @@
                         @enderror
                     </div>
                     
+
                     <div class="mb-3">
                         <label for="password" class="form-label">Contraseña</label>
                         <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
@@ -290,14 +291,14 @@
 
                     <div class="mb-3">
                         <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
-                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation"
-                            name="password_confirmation" required>
+                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation" required>
                         @error('password_confirmation')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
                         @enderror
                     </div>
+
 
                     <div class="mb-3">
                         <label for="status" class="form-label">Estado</label>
@@ -422,8 +423,6 @@
         @endif
     });
 </script>
-
-
 
 
 <script>
@@ -586,5 +585,101 @@
                     rolesList.appendChild(listItem);
                 }
             });
+    });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fields = [
+            { id: 'password', iconId: 'password-icon' },
+            { id: 'password_confirmation', iconId: 'password-confirmation-icon' }
+        ];
+
+        fields.forEach(field => {
+            const inputElement = document.getElementById(field.id);
+
+            // Estilos en línea para eliminar íconos predeterminados del navegador
+            inputElement.style.webkitAppearance = 'none'; // Chrome, Safari, Edge
+            inputElement.style.mozAppearance = 'textfield'; // Firefox
+            inputElement.style.appearance = 'none'; // General para navegadores modernos
+            inputElement.style.paddingRight = '2.5rem'; // Espacio para el ícono personalizado
+
+            // Eliminar pseudo-elementos nativos dinámicos
+            const style = document.createElement('style');
+            style.innerHTML = `
+                #${field.id}::-ms-reveal,
+                #${field.id}::-ms-clear,
+                #${field.id}::-webkit-clear-button,
+                #${field.id}::-webkit-inner-spin-button {
+                    display: none !important; /* Ocultar íconos predeterminados */
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Crear el ícono personalizado
+            const iconElement = document.createElement('i');
+            iconElement.classList.add('fas', 'fa-eye', 'position-absolute', 'text-muted');
+            iconElement.style.cursor = 'pointer';
+            iconElement.style.right = '1rem';
+            iconElement.style.top = '50%';
+            iconElement.style.transform = 'translateY(-50%)';
+            iconElement.id = field.iconId;
+
+            // Crear un contenedor para el input y el ícono
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'relative';
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.width = '100%';
+
+            // Insertar el contenedor antes del input y mover el input dentro del contenedor
+            inputElement.parentNode.insertBefore(wrapper, inputElement);
+            wrapper.appendChild(inputElement);
+            wrapper.appendChild(iconElement);
+
+            // Alternar entre mostrar y ocultar contraseña
+            iconElement.addEventListener('click', function () {
+                const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputElement.setAttribute('type', type);
+                iconElement.classList.toggle('fa-eye');
+                iconElement.classList.toggle('fa-eye-slash');
+            });
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('password_confirmation');
+
+        // Función para verificar si las contraseñas coinciden
+        const checkPasswordsMatch = () => {
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+
+            if (confirmPassword === '') {
+                // Restaurar bordes si el campo está vacío
+                passwordField.style.borderColor = '';
+                confirmPasswordField.style.borderColor = '';
+                return;
+            }
+
+            if (password === confirmPassword) {
+                // Cambiar los bordes a verde si coinciden
+                passwordField.style.borderColor = '#90ee90'; // Verde claro
+                confirmPasswordField.style.borderColor = '#90ee90'; // Verde claro
+            } else {
+                // Cambiar los bordes a rojo si no coinciden
+                passwordField.style.borderColor = 'red';
+                confirmPasswordField.style.borderColor = 'red';
+            }
+        };
+
+        // Escuchar eventos para actualizar los bordes dinámicamente
+        passwordField.addEventListener('input', checkPasswordsMatch);
+        confirmPasswordField.addEventListener('input', checkPasswordsMatch);
     });
 </script>
