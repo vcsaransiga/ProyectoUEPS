@@ -9,21 +9,22 @@
                 @csrf
                 @method('PUT')
 
-                <!-- Mensaje de éxito o error -->
-                <div class="row justify-content-center">
+                <!-- Mensaje de éxito o error --> <!--daba doble mensaje de error o success-->
+                <!-- <div class="row justify-content-center">
                     <div class="col-lg-9 col-12">
                         @if (session('error'))
-                            <div class="alert alert-danger" role="alert" id="alert">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="error-alert">
                                 {{ session('error') }}
-                            </div>
-                        @endif
-                        @if (session('success'))
-                            <div class="alert alert-success" role="alert" id="alert">
+                                <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+                            <!-- </div>
+                        @elseif (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-alert">
                                 {{ session('success') }}
-                            </div>
+                                <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+                            <!-- </div>
                         @endif
-                    </div>
-                </div>
+                    </div> -->
+                <!-- </div> --> --> -->
 
                 <!-- Cuadro de foto de perfil centrado con información -->
                 <div class="row justify-content-center mt-5">
@@ -139,4 +140,28 @@
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const successAlert = document.getElementById('success-alert');
+            const errorAlert = document.getElementById('error-alert');
+
+            if (successAlert) {
+                setTimeout(() => {
+                    successAlert.classList.remove('show');
+                    successAlert.classList.add('fade');
+                    setTimeout(() => successAlert.remove(), 500); // Remover tras fade-out
+                }, 10000); // 10 segundos
+            }
+
+            if (errorAlert) {
+                setTimeout(() => {
+                    errorAlert.classList.remove('show');
+                    errorAlert.classList.add('fade');
+                    setTimeout(() => errorAlert.remove(), 500); // Remover tras fade-out
+                }, 10000); // 10 segundos
+            }
+        });
+    </script>
+
 </x-app-layout>

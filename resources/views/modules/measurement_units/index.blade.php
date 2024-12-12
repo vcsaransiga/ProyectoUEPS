@@ -27,7 +27,7 @@
                             </div>
                         </div>
 
-                        @if (session('success'))
+                        <!-- @if (session('success'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('success') }}
                             </div>
@@ -36,7 +36,9 @@
                             <div class="alert alert-danger" role="alert">
                                 {{ session('error') }}
                             </div>
-                        @endif
+                        @endif -->
+
+                        <!-- Mensaje de éxito -->
 
                         <div class="tw-relative tw-overflow-x-auto tw-shadow-md sm:tw-rounded-lg tw-p-5">
                             <div

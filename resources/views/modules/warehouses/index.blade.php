@@ -27,7 +27,7 @@
                             </div>
                         </div>
 
-                        <div class="row justify-content-center">
+                        <!-- <div class="row justify-content-center">
                             <div class="">
                                 @if (session('success'))
                                     <div class="alert alert-success" role="alert" id="alert">
@@ -40,7 +40,7 @@
                                     </div>
                                 @endif
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Mensaje de éxito -->
                         <div id="message"

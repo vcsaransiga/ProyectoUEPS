@@ -27,7 +27,7 @@
                             </div>
                         </div>
 
-                        @if (session('success'))
+                        <!-- @if (session('success'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('success') }}
                             </div>
@@ -36,7 +36,10 @@
                             <div class="alert alert-danger" role="alert">
                                 {{ session('error') }}
                             </div>
-                        @endif
+                        @endif -->
+
+
+                        <!-- Mensaje de éxito -->
 
                         <div id="message"
                             class="tw-hidden tw-bg-green-100 tw-border tw-border-green-400 tw-text-green-700 tw-px-4 tw-py-3 tw-rounded tw-relative"
