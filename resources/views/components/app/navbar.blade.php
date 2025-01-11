@@ -11,10 +11,10 @@
                 <!-- Imagen de perfil como botón -->
                 <a href="{{ route('users.profile') }}" class="nav-link text-body p-0 d-flex align-items-center">
                     <img 
-                        src="{{ asset('storage/profile_photos/default.jpg') }}" 
-                        alt="Perfil del usuario"
-                        class="avatar avatar-sm border-radius-lg shadow-sm"
-                        style="width: 40px; height: 40px; object-fit: cover; margin-left: 10px;">
+                    src="{{ asset('storage/' . (auth()->user()->profile_photo ?? 'profile_photos/default.jpg')) }}?v={{ time() }}" 
+                    alt="Perfil del usuario"
+                    class="avatar avatar-sm border-radius-lg shadow-sm"
+                    style="width: 40px; height: 40px; object-fit: cover; margin-left: 10px;">
                 </a>
             </div>
         </div>
