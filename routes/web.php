@@ -26,6 +26,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\KardexController;
 use App\Http\Controllers\AuditController;
 use App\Http\Middleware\ThrottleLogins;
+use App\Http\Controllers\CustomerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -135,6 +136,11 @@ Route::group(['middleware' => ['auth', 'verified', '2fa']], function () {
         Route::get('/students/export-excel', [StudentController::class, 'exportExcel'])->name('students.download-excel');
         Route::get('/info/students/{id_stud}/modules', [StudentController::class, 'getModules'])->name('students.getModules');
 
+        //Clientes
+        Route::resource('/info/customers', CustomerController::class);
+        Route::get('/customers/pdf', [CustomerController::class, 'generatePDF'])->name('customers.pdf');
+        Route::get('/customers/export-excel', [CustomerController::class, 'exportExcel'])->name('customers.download-excel');
+
         // Periodos
         Route::resource('/info/periods', PeriodController::class);
         Route::get('/periods/pdf', [PeriodController::class, 'generatePDF'])->name('periods.pdf');
@@ -219,6 +225,9 @@ Route::group(['middleware' => ['auth', 'verified', '2fa']], function () {
         //Estudiantes
         Route::delete('/info/selected-students', [StudentController::class, 'deleteAll'])->name('student.delete');
         Route::patch('/info/selected-students/deactivate', [StudentController::class, 'deactivateAll'])->name('student.deactivate');
+
+        //Clientes
+        Route::delete('/info/selected-customers', [CustomerController::class, 'deleteAll'])->name('customer.delete');
 
         //Periodos
         Route::delete('/info/selected-periods', [PeriodController::class, 'deleteAll'])->name('period.delete');
