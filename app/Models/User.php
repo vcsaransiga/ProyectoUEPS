@@ -63,17 +63,27 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     // {
     //     return $value ? 'Activo' : 'Inactivo';
     // }
+
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmailNotification);
     }
+
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));
     }
 
+
     public function getUserRoles(User $user)
     {
         return response()->json(['roles' => $user->roles->pluck('name')->toArray()]);
     }
+
+    public function proyectos()
+{
+    return $this->belongsToMany(Project::class, 'vendedor_proyecto', 'vendedor_id', 'proyecto_id');
+}
+
 }

@@ -11,9 +11,7 @@ use App\Exports\UserExport;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
-
 {
-
     public function index(Request $request)
     {
         $sortField = $request->get('sort', 'id'); // Campo por defecto
@@ -24,6 +22,7 @@ class UserController extends Controller
 
         return view('modules.users.index', compact('users', 'roles', 'sortField', 'sortDirection'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -47,45 +46,59 @@ class UserController extends Controller
             'status.required' => 'El estado es obligatorio',
             'roles.required' => 'Debes seleccionar al menos un rol',
         ]);
-    
+
         // Crea el usuario con los datos, cifrando la contraseña
         $user = User::create([
             'name' => $request->name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => bcrypt($request->password), // Ciframos la contraseña
+            'password' => bcrypt($request->password),
             'status' => $request->status,
         ]);
-    
-        // Asigna los roles seleccionados (usando los id de los roles)
-        $user->assignRole($request->roles); // Aquí usas los ids de los roles que el formulario envió
-    
+
+        // Asigna los roles seleccionados
+        $user->assignRole($request->roles);
+
         return redirect()->route('users.index')->with('success', 'Usuario creado correctamente.');
     }
-    
+
+    public function edit(User $user)
+    {
+        $roles = Role::all(); // Obtiene todos los roles disponibles, incluyendo "Vendedor"
+        return view('modules.users.edit', compact('user', 'roles'));
+    }
 
     public function update(Request $request, User $user)
     {
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-        'status' => 'required|boolean',
-        'roles' => 'required|array',
-    ], [
-        'name.required' => 'El nombre es obligatorio',
-        'last_name.required' => 'El apellido es obligatorio',
-        'email.required' => 'El correo electrónico es obligatorio',
-        'email.email' => 'Debe ser una dirección de correo electrónico válida',
-        'email.unique' => 'El correo electrónico ya está registrado',
-        'status.required' => 'El estado es obligatorio',
-        'roles.required' => 'Debes seleccionar al menos un rol',
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'status' => 'required|boolean',
+            'roles' => 'nullable|array', // Permitir que roles sea opcional
+        ], [
+            'name.required' => 'El nombre es obligatorio',
+            'last_name.required' => 'El apellido es obligatorio',
+            'email.required' => 'El correo electrónico es obligatorio',
+            'email.email' => 'Debe ser una dirección de correo electrónico válida',
+            'email.unique' => 'El correo electrónico ya está registrado',
+            'status.required' => 'El estado es obligatorio',
+        ]);
 
-    $user->update($request->all());
-    $user->syncRoles($request->roles);
+        // Actualiza los datos del usuario
+        $user->update([
+            'name' => $request->name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'status' => $request->status,
+        ]);
 
-    return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
+        // Sincroniza los roles seleccionados
+        if ($request->has('roles')) {
+            $user->syncRoles($request->roles);
+        }
+
+        return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
     }
 
     public function search(Request $request)
@@ -110,10 +123,7 @@ class UserController extends Controller
             return response()->json(["error" => "No se han seleccionado usuarios."]);
         }
 
-        $users = User::whereIn('id', $ids)->get();
-        foreach ($users as $user) {
-            $user->update(['status' => 0]);
-        }
+        User::whereIn('id', $ids)->update(['status' => 0]);
 
         return response()->json(["success" => "Usuarios seleccionados desactivados exitosamente."]);
     }
@@ -126,10 +136,7 @@ class UserController extends Controller
             return response()->json(["error" => "No se han seleccionado usuarios."]);
         }
 
-        $users = User::whereIn('id', $ids)->get();
-        foreach ($users as $user) {
-            $user->delete();
-        }
+        User::whereIn('id', $ids)->delete();
 
         return response()->json(["success" => "Usuarios seleccionados eliminados exitosamente."]);
     }
@@ -137,7 +144,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'User eliminado exitosamente.');
+        return redirect()->route('users.index')->with('success', 'Usuario eliminado exitosamente.');
     }
 
     public function generatePDF()

@@ -26,6 +26,8 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\KardexController;
 use App\Http\Controllers\AuditController;
 use App\Http\Middleware\ThrottleLogins;
+use App\Http\Controllers\VendedorProyectoController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -285,6 +287,12 @@ Route::group(['middleware' => ['auth', 'verified', '2fa']], function () {
         Route::get('/audits/user-activity/{user}', [AuditController::class, 'getUserActivity'])->name('audits.user-activity');
     });
 
+    // Rutas de vendedor
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/ventas', [VendedorProyectoController::class, 'index'])->name('ventas.index');
+        Route::post('/vendedor-proyecto', [VendedorProyectoController::class, 'store'])->name('vendedor-proyecto.store');
+        Route::delete('/vendedor-proyecto/{id}', [VendedorProyectoController::class, 'destroy'])->name('vendedor-proyecto.destroy');
+    });
     // Route::group(['middleware' => ['role:administrador|coordinador']], function () {
 
 

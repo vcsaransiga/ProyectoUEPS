@@ -15,7 +15,16 @@ class Project extends Model implements Auditable
     public $incrementing = false;
 
     protected $fillable = [
-        'id_pro', 'id_responsible', 'name', 'description', 'status', 'progress', 'start_date', 'end_date', 'budget', 'image',
+        'id_pro',
+        'id_responsible',
+        'name',
+        'description',
+        'status',
+        'progress',
+        'start_date',
+        'end_date',
+        'budget',
+        'image',
     ];
 
 
@@ -54,5 +63,10 @@ class Project extends Model implements Auditable
     public function kardex()
     {
         return $this->hasMany(Kardex::class, 'id_pro', 'id_pro');
+    }
+
+    public function vendedores()
+    {
+        return $this->belongsToMany(User::class, 'vendedor_proyecto', 'proyecto_id', 'vendedor_id');
     }
 }

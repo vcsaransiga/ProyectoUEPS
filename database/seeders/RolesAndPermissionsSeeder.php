@@ -43,5 +43,9 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $roleManager = Role::create(['name' => 'jefe de proyecto']);
         $roleManager->givePermissionTo(['leer', 'reportar', 'crear proyectos', 'editar proyectos', 'eliminar proyectos', 'reportar proyectos']);
+
+        $roleVendedor = Role::firstOrCreate(['name' => 'vendedor']);
+        $permissionVerVentas = Permission::firstOrCreate(['name' => 'ver_ventas']);
+        $roleVendedor->givePermissionTo($permissionVerVentas);
     }
 }
