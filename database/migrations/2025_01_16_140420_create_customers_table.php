@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('customers')) { 
+        if (!Schema::hasTable('customers')) {
             Schema::create('customers', function (Blueprint $table) {
                 $table->id(); 
+                $table->string('custom_id')->unique()->nullable(); // <-- Aquí está el nuevo campo
                 $table->string('national_id', 20)->unique()->nullable(); 
                 $table->string('name', 255);
                 $table->string('phone', 20)->nullable(); 
@@ -23,7 +24,7 @@ return new class extends Migration
             });
         }
     }
-    
+
     /**
      * Reverse the migrations.
      */

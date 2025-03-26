@@ -38,16 +38,14 @@ class CustomerController extends Controller
             'email' => 'required|string|email|max:255|unique:customers',
             'address' => 'required|string|max:255',
         ]);
-
-        // Obtener el último cliente basado en el id
+    
+        // Obtener el último cliente basado en el ID
         $lastCustomer = Customer::orderBy('id', 'desc')->first();
-
-        // Extraer el número del id y convertirlo a entero
-        $lastIdNumber = $lastCustomer ? intval($lastCustomer->id) : 0;
-
-        // Incrementar el número para el nuevo ID
-        $newId = $lastIdNumber + 1;
-
+    
+        // Calcular nuevo ID (si lo estás controlando tú manualmente)
+        $newId = $lastCustomer ? $lastCustomer->id + 1 : 1;
+    
+        // Crear el cliente sin el custom_id
         $customer = Customer::create([
             'id' => $newId,
             'national_id' => $request->national_id,
@@ -56,9 +54,13 @@ class CustomerController extends Controller
             'email' => $request->email,
             'address' => $request->address,
         ]);
-
+    
+        // Generar el custom_id con ceros a la izquierda
+        $customer->custom_id = 'CLI-' . str_pad($customer->id, 2, '0', STR_PAD_LEFT);
+        $customer->save();
+    
         return redirect()->route('customers.index')->with('success', 'Cliente agregado correctamente.');
-    }
+    }    
 
     public function update(Request $request, $id)
     {

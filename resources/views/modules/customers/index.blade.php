@@ -16,18 +16,17 @@
                                         <p class="mb-0 text-sm">Aquí puedes visualizar los clientes.</p>
                                     @endrole
                                 </div>
-                                <!--   @role('administrador')
-    <div class="col-6 text-end">
-                                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                                    data-bs-target="#createcustomerModal">
-                                                    <i class="fas fa-user-plus me-2"></i> Agregar estudiante
-                                                </button>
-                                            </div>
-@endrole -->
+                                @role('administrador')
+                                    <div class="col-6 text-end">
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createCustomerModal">
+                                            <i class="fas fa-user-plus me-2"></i> Agregar cliente
+                                        </button>
+                                    </div>
+                                @endrole
                             </div>
                         </div>
 
-                        @if (session('success'))
+                        <!-- @if (session('success'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('success') }}
                             </div>
@@ -36,7 +35,7 @@
                             <div class="alert alert-danger" role="alert">
                                 {{ session('error') }}
                             </div>
-                        @endif
+                        @endif -->
 
                         <!-- Mensaje de éxito -->
                         <div id="message"
@@ -120,12 +119,9 @@
                                         @endrole
                                         <th scope="col" class="tw-px-6 tw-py-3">
                                             <div class="tw-flex tw-items-center">
-                                                ID
-                                                <a
-                                                    href="?sort=id&direction={{ $sortField === 'id' && $sortDirection === 'asc' ? 'desc' : 'asc' }}">
-                                                    <img class="tw-w-5 tw-h-5 tw-ms-1.5" aria-hidden="true"
-                                                        src="{{ asset('assets/img/logos/up-down.svg') }}"
-                                                        viewBox="0 0 24 24">
+                                                Código
+                                                <a href="?sort=custom_id&direction={{ $sortField === 'custom_id' && $sortDirection === 'asc' ? 'desc' : 'asc' }}">
+                                                    <img class="tw-w-5 tw-h-5 tw-ms-1.5" src="{{ asset('assets/img/logos/up-down.svg') }}">
                                                 </a>
                                             </div>
                                         </th>
@@ -203,9 +199,7 @@
                                                     </div>
                                                 </td>
                                             @endrole
-                                            <td class="tw-px-6 tw-py-4">
-                                                {{ $customer->id }}
-                                            </td>
+                                            <td class="tw-px-6 tw-py-4">{{ $customer->custom_id ?? '-' }}</td>
                                             <td class="tw-px-6 tw-py-4">{{ $customer->national_id }}</td>
                                             <td class="tw-px-6 tw-py-4">{{ $customer->name }}</td>
                                             <td class="tw-px-6 tw-py-4">{{ $customer->phone }}</td>
@@ -286,6 +280,54 @@
         </div>
     </main>
 
+    <!-- Modal Crear Cliente -->
+    <div class="modal fade" id="createCustomerModal" tabindex="-1" aria-labelledby="createCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog"> <!-- más delgado que modal-lg -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCustomerModalLabel">Agregar cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" style="background-color: red;"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('customers.store') }}">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label for="national_id" class="form-label">Cédula</label>
+                            <input type="text" class="form-control" id="national_id" name="national_id" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="phone" name="phone">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="email" name="email">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="address" name="address" required>
+                        </div>
+
+                        <div class="tw-text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Guardar
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Edit Customer Modal -->
     <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel"
         aria-hidden="true">
