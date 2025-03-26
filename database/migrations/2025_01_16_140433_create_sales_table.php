@@ -20,6 +20,7 @@ return new class extends Migration
                 $table->unsignedBigInteger('customer_id');
                 $table->unsignedBigInteger('employee_id');
                 $table->text('comments')->nullable();
+                $table->boolean('pdf_generated')->default(false); // <-- Aquí añadimos esta columna
                 $table->timestamps();
     
                 $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
@@ -27,7 +28,6 @@ return new class extends Migration
             });
         }
     }
-    
 
     /**
      * Reverse the migrations.

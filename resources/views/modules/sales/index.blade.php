@@ -45,43 +45,46 @@
                                             <td class="tw-px-6 tw-py-4">{{ \Carbon\Carbon::parse($sale->sale_date)->format('d/m/Y H:i') }}</td>
                                             <td class="tw-px-6 tw-py-4">{{ $sale->payment_method }}</td>
                                             <td class="tw-px-6 tw-py-4">$ {{ number_format($sale->total, 2) }}</td>
-                                            <td class="tw-px-6 tw-py-4 tw-flex tw-space-x-2 align-items-center">
-                                                <!-- {{-- Botón Editar --}} -->
-                                                <a href="#"
-                                                class="tw-font-medium tw-text-blue-600 dark:tw-text-blue-500 hover:tw-underline {{ $sale->pdf_generated ? 'tw-opacity-30 tw-pointer-events-none' : '' }}"
-                                                title="Editar Venta"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editSaleModal"
-                                                data-sale-id="{{ $sale->id }}"
-                                                data-customer-id="{{ $sale->customer_id }}"
-                                                data-payment-method="{{ $sale->payment_method }}"
-                                                data-comments="{{ $sale->comments }}">
-                                                    <svg class="tw-w-6 tw-h-6 tw-text-gray-800 dark:tw-text-white"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="currentColor"
-                                                        viewBox="0 0 24 24">
+                                            <td class="tw-px-6 tw-py-4 tw-flex tw-space-x-2">
+                                                {{-- Icono Editar --}}
+                                                @if (!$sale->pdf_generated)
+                                                    <a href="#"
+                                                        class="tw-text-green-600 hover:tw-text-green-800"
+                                                        title="Editar"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editSaleModal"
+                                                        data-sale-id="{{ $sale->id }}"
+                                                        data-customer-id="{{ $sale->customer_id }}"
+                                                        data-payment-method="{{ $sale->payment_method }}"
+                                                        data-comments="{{ $sale->comments }}">
+                                                        <svg class="tw-w-6 tw-h-6" fill="currentColor" viewBox="0 0 24 24">
+                                                            <path fill-rule="evenodd"
+                                                                d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012ZM11.283 6.945 6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z"
+                                                                clip-rule="evenodd" />
+                                                        </svg>
+                                                    </a>
+                                                @else
+                                                {{-- Icono bloqueado (cuando ya no se puede editar) --}}
+                                                    <svg class="tw-w-6 tw-h-6 tw-text-gray-500" fill="currentColor" viewBox="0 0 24 24"
+                                                        title="Esta venta ya no se puede editar (PDF generado)">
                                                         <path fill-rule="evenodd"
-                                                            d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z"
+                                                            d="M12 2a4 4 0 0 0-4 4v2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-1V6a4 4 0 0 0-4-4Zm2 6V6a2 2 0 1 0-4 0v2h4Z"
                                                             clip-rule="evenodd" />
                                                     </svg>
-                                                </a>
+                                                @endif
 
-                                                <!-- {{-- Botón PDF --}} -->
-                                                <a href="{{ route('sales.generatePdf', $sale->id) }}"
-                                                class="tw-font-medium tw-text-red-600 dark:tw-text-red-500 hover:tw-underline"
-                                                title="Descargar PDF">
-                                                    <svg class="tw-w-6 tw-h-6 tw-text-red-500"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path d="M6 2a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 
-                                                                2 0 0 0 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"/>
-                                                        <text x="7" y="17" font-size="7" fill="red" font-family="Arial, sans-serif">PDF</text>
-                                                    </svg>
-                                                </a>
+                                                {{-- Icono PDF --}}
+                                                <form action="{{ route('sales.generatePdf', $sale->id) }}" method="POST" style="display:inline-block;">
+                                                    @csrf
+                                                    <button type="submit" class="tw-text-red-600 hover:tw-text-red-800" title="Generar PDF">
+                                                        <svg class="tw-w-6 tw-h-6" fill="currentColor" viewBox="0 0 24 24">
+                                                            <path fill-rule="evenodd"
+                                                                d="M6 2a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6H6Zm7 1.5L18.5 9H13a1 1 0 0 1-1-1V3.5Zm-4.25 8.25a.75.75 0 0 1 .75-.75h.5a2.25 2.25 0 1 1 0 4.5H10v.25a.75.75 0 0 1-1.5 0v-4Zm1.5.75v1.5h.5a.75.75 0 0 0 0-1.5h-.5Zm4.03 2.25a.75.75 0 0 0-.53 1.28l.72.72-.72.72a.75.75 0 1 0 1.06 1.06l.72-.72.72.72a.75.75 0 0 0 1.06-1.06l-.72-.72.72-.72a.75.75 0 0 0-1.06-1.06l-.72.72-.72-.72a.75.75 0 0 0-.53-.22ZM14 14a.75.75 0 0 1 .75-.75h.5a2.25 2.25 0 0 1 0 4.5h-.5a.75.75 0 0 1 0-1.5h.5a.75.75 0 0 0 0-1.5h-.5A.75.75 0 0 1 14 14Z"
+                                                                clip-rule="evenodd" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
                                             </td>
-
-
                                         </tr>
                                     @endforeach
                                 </tbody>
