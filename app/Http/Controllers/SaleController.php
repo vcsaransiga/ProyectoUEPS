@@ -66,6 +66,20 @@ class SaleController extends Controller
             ]);
         }
 
+            // Rebajar stock del producto
+        $item = Item::find($product['product_id']);
+        if ($item) {
+            $item->stock -= $product['quantity'];
+            $item->save();
+        }
+
+        $lowStockItems = Item::where('stock', '<=', 5)->get();
+
+        if ($lowStockItems->count() > 0) {
+            $alertList = $lowStockItems->pluck('name')->implode(', ');
+            session()->flash('warning', "⚠️ Atención: los siguientes productos tienen 5 unidades o menos: $alertList.");
+        }
+
         return redirect()->route('sales.index')->with('success', 'Venta registrada correctamente.');
     }
 

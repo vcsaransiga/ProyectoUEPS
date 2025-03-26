@@ -18,11 +18,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif -->
-
                         <div class="tw-relative tw-overflow-x-auto tw-shadow-md sm:tw-rounded-lg tw-p-5">
                             <table class="tw-w-full tw-text-sm tw-text-left tw-text-gray-500">
                                 <thead class="tw-text-xs tw-uppercase tw-bg-gray-50 tw-text-gray-700">
@@ -142,7 +137,7 @@
                                             <select name="products[0][product_id]" class="form-control product-select" required onchange="updatePrice(this)">
                                                 <option value="">-- Seleccione --</option>
                                                 @foreach ($items as $item)
-                                                    <option value="{{ $item->id_item }}" data-price="{{ $item->price }}">{{ $item->name }}</option>
+                                                <option value="{{ $item->id_item }}" data-price="{{ $item->price }}" data-stock="{{ $item->stock }}">{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -261,7 +256,7 @@
                             <select name="products[${editProductIndex}][product_id]" class="form-control" required onchange="updateEditPrice(this)">
                                 <option value="">-- Seleccione --</option>
                                 ${itemsData.map(item => `
-                                    <option value="${item.id_item}" data-price="${item.price}" ${detail.product_id === item.id_item ? 'selected' : ''}>${item.name}</option>
+                                <option value="${item.id_item}" data-price="${item.price}" data-stock="${item.stock}" ${detail.product_id === item.id_item ? 'selected' : ''}>${item.name}</option>
                                 `).join('')}
                             </select>
                         </td>
@@ -285,7 +280,7 @@
                 <select name="products[${editProductIndex}][product_id]" class="form-control" required onchange="updateEditPrice(this)">
                     <option value="">-- Seleccione --</option>
                     ${itemsData.map(item => `
-                        <option value="${item.id_item}" data-price="${item.price}">${item.name}</option>
+                    <option value="${item.id_item}" data-price="${item.price}" data-stock="${item.stock}">${item.name}</option>
                     `).join('')}
                 </select>
             </td>
@@ -309,6 +304,13 @@
         const row = input.closest('tr');
         const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
         const price = parseFloat(row.querySelector('.unit-price').value) || 0;
+
+        const stock = parseInt(row.querySelector('select').selectedOptions[0].dataset.stock) || 0;
+        if (quantity > stock) {
+            alert(`La cantidad supera el stock disponible (${stock})`);
+            input.value = stock;
+        }
+
         const subtotal = quantity * price;
         row.querySelector('.subtotal').value = subtotal.toFixed(2);
         updateEditTotal();
@@ -343,7 +345,15 @@
             const row = input.closest('tr');
             const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
             const price = parseFloat(row.querySelector('.unit-price').value) || 0;
-            row.querySelector('.subtotal').value = (quantity * price).toFixed(2);
+
+            const stock = parseInt(row.querySelector('select').selectedOptions[0].dataset.stock) || 0;
+            if (quantity > stock) {
+                alert(`La cantidad supera el stock disponible (${stock})`);
+                input.value = stock;
+            }
+
+            const subtotal = (input.value * price);
+            row.querySelector('.subtotal').value = subtotal.toFixed(2);
             updateTotal();
         }
 
@@ -382,4 +392,42 @@
             productIndex++;
         }
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alert = document.getElementById('stock-alert');
+            if (alert) {
+                setTimeout(() => {
+                    alert.remove();
+                }, 5000); // 5 segundos
+            }
+        });
+    </script>
+
+@if(session('warning'))
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+    <div id="stockToast" class="toast align-items-center text-white bg-warning border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong class="me-2"><i class="fas fa-exclamation-triangle"></i> Alerta:</strong>
+                {{ session('warning') }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+        </div>
+    </div>
+</div>
+@endif
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toastEl = document.getElementById('stockToast');
+        if (toastEl) {
+            const toast = new bootstrap.Toast(toastEl, { delay: 10000 });
+            toast.show();
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </x-app-layout>
+
