@@ -17,6 +17,8 @@ class Sale extends Model
         'employee_id',
         'comments',
     ];
+    
+    protected $dates = ['sale_date'];
 
     public function customer()
     {

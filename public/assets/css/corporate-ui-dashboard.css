@@ -27576,4 +27576,12 @@ button.swiper-pagination-bullet {
   color: #0f172a;
 }
 
+select.form-control {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  font-size: 1rem;
+}
+
+
 /*# sourceMappingURL=dashboard-free.css.map */
