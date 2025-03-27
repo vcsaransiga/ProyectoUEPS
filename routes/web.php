@@ -211,14 +211,17 @@ Route::group(['middleware' => ['auth', 'verified', '2fa']], function () {
         Route::get('/kardex/pdf', [KardexController::class, 'generatePDF'])->name('kardex.pdf');
         Route::get('/kardex/export-excel', [KardexController::class, 'exportExcel'])->name('kardex.download-excel');
 
-        //Ventas
+        // Ventas
         Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
         Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
-        Route::get('/sales/pdf', [SaleController::class, 'exportPDF'])->name('sales.export-pdf');
+        Route::get('/sales/{sale}/pdf', [SaleController::class, 'generatePdf'])->name('sales.generatePdf');
+
+        
+        Route::get('/sales/pdf', [SaleController::class, 'exportAllPDF'])->name('sales.export-pdf');
         Route::get('/sales/excel', [SaleController::class, 'exportExcel'])->name('sales.export-excel');
-        Route::get('/sales/{sale}/pdf', [App\Http\Controllers\SaleController::class, 'generatePdf'])->name('sales.generatePdf');
         Route::get('/sales/{sale}/products-json', [SaleController::class, 'getSaleDetails']);
         Route::put('/sales/{id}', [SaleController::class, 'update'])->name('sales.update');
+
 
     });
 

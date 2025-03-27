@@ -21,10 +21,10 @@ class SaleController extends Controller
         $sales = Sale::with('customer', 'employee')->orderByDesc('sale_date')->get();
         $customers = \App\Models\Customer::all();
         $items = \App\Models\Item::all(); // Para el modal de venta
-    
+
         return view('modules.sales.index', compact('sales', 'customers', 'items'));
     }
-    
+
     public function create()
     {
         $customers = Customer::all();
@@ -66,7 +66,7 @@ class SaleController extends Controller
             ]);
         }
 
-            // Rebajar stock del producto
+        // Rebajar stock del producto
         $item = Item::find($product['product_id']);
         if ($item) {
             $item->stock -= $product['quantity'];
@@ -83,31 +83,35 @@ class SaleController extends Controller
         return redirect()->route('sales.index')->with('success', 'Venta registrada correctamente.');
     }
 
-    public function exportPDF()
+
+    public function exportAllPDF()
     {
         $sales = Sale::with('customer', 'employee', 'saleDetails')->get();
-        $pdf = Pdf::loadView('modules.sales.pdf', compact('sales'));
-        return $pdf->download('ventas.pdf');
+        $pdf = Pdf::loadView('modules.sales.pdfall', compact('sales'));
+        return $pdf->download('todas_las_ventas.pdf');
     }
-
-    public function exportExcel()
-    {
-        return Excel::download(new SalesExport, 'ventas.xlsx');
-    }
-
     public function generatePdf($id)
     {
         $sale = Sale::with('customer', 'employee', 'saleDetails.product')->findOrFail($id);
-
-        // Marcamos como generado (esto evita futuros edits)
-        $sale->pdf_generated = true;
-        $sale->save();
 
         $pdf = \PDF::loadView('modules.sales.pdf', ['sale' => $sale]);
 
         $filename = "Venta-{$sale->id}.pdf";
         return $pdf->download($filename);
     }
+
+
+
+
+    public function exportExcel()
+    {
+        $date = date('d-m-Y H:i:s');
+        $excelName = "Ventas {$date}.xlsx";
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\SalesExport, $excelName);
+    }
+
+
+
 
     public function getSaleDetails($id)
     {
@@ -126,12 +130,12 @@ class SaleController extends Controller
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.unit_price' => 'required|numeric|min:0',
         ]);
-    
+
         DB::beginTransaction();
-    
+
         try {
             $sale = Sale::findOrFail($id);
-    
+
             // Actualiza los campos de la venta
             $sale->update([
                 'customer_id' => $request->customer_id,
@@ -139,10 +143,10 @@ class SaleController extends Controller
                 'comments' => $request->comments,
                 'total' => collect($request->products)->sum(fn($p) => $p['quantity'] * $p['unit_price']),
             ]);
-    
+
             // Elimina los detalles actuales
             $sale->saleDetails()->delete();
-    
+
             // Crea los nuevos detalles
             foreach ($request->products as $product) {
                 SaleDetail::create([
@@ -153,16 +157,16 @@ class SaleController extends Controller
                     'subtotal' => $product['quantity'] * $product['unit_price'],
                 ]);
             }
-    
+
             DB::commit();
-    
+
             return redirect()->route('sales.index')->with('success', 'Registro de venta actualizado correctamente.');
-    
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Error al actualizar la venta: ' . $e->getMessage());
         }
     }
 
-} 
+}
 
