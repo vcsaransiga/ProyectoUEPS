@@ -389,6 +389,24 @@
             row.remove();
             updateEditTotal();
         }
+
+        function searchByCustomer() {
+            let input = document.getElementById("table-search-sales").value.toLowerCase().trim();
+            let table = document.querySelector("table");
+            let rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) { // Omitimos el encabezado
+                let customerCell = rows[i].getElementsByTagName("td")[1]; // Segunda columna (Cliente)
+
+                if (customerCell) {
+                    let textValue = customerCell.textContent || customerCell.innerText;
+                    let customerName = textValue.split('-').pop().trim(); // Extrae solo el nombre del cliente
+
+                    // Mostrar u ocultar fila según la búsqueda
+                    rows[i].style.display = customerName.toLowerCase().includes(input) ? "" : "none";
+                }
+            }
+        }
     </script>
 
     <script>
