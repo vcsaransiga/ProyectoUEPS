@@ -87,14 +87,26 @@ class SaleController extends Controller
     public function exportAllPDF()
     {
         $sales = Sale::with('customer', 'employee', 'saleDetails')->get();
-        $pdf = Pdf::loadView('modules.sales.pdfall', compact('sales'));
-        return $pdf->download('todas_las_ventas.pdf');
+        $data = [
+
+            'title' => 'Registro de Ventas',
+            'date' => date('d/m/Y H:i:s'),
+            'sales' => $sales
+        ];
+        $pdf = Pdf::loadView('modules.sales.pdfall', $data);
+        
+        return $pdf->download('Ventas_registradas.pdf');
     }
     public function generatePdf($id)
     {
         $sale = Sale::with('customer', 'employee', 'saleDetails.product')->findOrFail($id);
+        $data = [
 
-        $pdf = \PDF::loadView('modules.sales.pdf', ['sale' => $sale]);
+            'title' => 'Detalle de Venta',
+            'date' => date('d/m/Y H:i:s'),
+            'sale' => $sale
+        ];
+        $pdf = PDF::loadView('modules.sales.pdf', $data);
 
         $filename = "Venta-{$sale->id}.pdf";
         return $pdf->download($filename);
